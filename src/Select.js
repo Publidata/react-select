@@ -516,9 +516,10 @@ class Select extends React.Component {
 	selectValue (value) {
 		//NOTE: update value in the callback to make sure the input value is empty so that there are no styling issues (Chrome had issue otherwise)
 		this.hasScrolledToOption = false;
+		const updatedValue = this.props.onSelectResetsInput ? '' : this.state.inputValue;
 		if (this.props.multi) {
 			this.setState({
-				inputValue: this.handleInputValueChange(''),
+				inputValue: this.handleInputValueChange(updatedValue),
 				focusedIndex: null
 			}, () => {
 				this.addValue(value);
@@ -526,7 +527,7 @@ class Select extends React.Component {
 		} else {
 			this.setState({
 				isOpen: false,
-				inputValue: this.handleInputValueChange(''),
+				inputValue: this.handleInputValueChange(updatedValue),
 				isPseudoFocused: this.state.isFocused,
 			}, () => {
 				this.setValue(value);
@@ -1114,6 +1115,7 @@ Select.propTypes = {
     valueKey: PropTypes.string,           // path of the label value in option objects
     valueRenderer: PropTypes.func,        // valueRenderer: function (option) {}
     wrapperStyle: PropTypes.object,       // optional style to apply to the component wrapper
+    onSelectResetsInput: PropTypes.bool, 	// whether input is cleared on select (works only for multiselect)
 };
 
 Select.defaultProps = {
@@ -1155,6 +1157,7 @@ Select.defaultProps = {
     tabSelectsValue: true,
     valueComponent: Value,
     valueKey: 'value',
+    onSelectResetsInput: true,
 };
 
 export default Select;
