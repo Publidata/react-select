@@ -42,7 +42,7 @@ var propTypes = {
 	loadingPlaceholder: _propTypes2['default'].oneOfType([// replaces the placeholder while options are loading
 	_propTypes2['default'].string, _propTypes2['default'].node]),
 	loadOptions: _propTypes2['default'].func.isRequired, // callback to load options asynchronously; (inputValue: string, callback: Function): ?Promise
-	clearOptionsOnSelection: _react2['default'].PropTypes.bool, // clears options after selecting a value when `multi` is true; defaults to true
+	clearOptionsOnSelection: _propTypes2['default'].bool, // clears options after selecting a value when `multi` is true; defaults to true
 	multi: _propTypes2['default'].bool, // multi-value input
 	options: _propTypes2['default'].array.isRequired, // array of options
 	pagination: _propTypes2['default'].bool, // automatically load more options when the option list is scrolled to the end; default to false
@@ -1544,9 +1544,10 @@ var Select = (function (_React$Component) {
 
 			//NOTE: update value in the callback to make sure the input value is empty so that there are no styling issues (Chrome had issue otherwise)
 			this.hasScrolledToOption = false;
+			var updatedValue = this.props.onSelectResetsInput ? '' : this.state.inputValue;
 			if (this.props.multi) {
 				this.setState({
-					inputValue: this.handleInputValueChange(''),
+					inputValue: this.handleInputValueChange(updatedValue),
 					focusedIndex: null
 				}, function () {
 					_this3.addValue(value);
@@ -1554,7 +1555,7 @@ var Select = (function (_React$Component) {
 			} else {
 				this.setState({
 					isOpen: false,
-					inputValue: this.handleInputValueChange(''),
+					inputValue: this.handleInputValueChange(updatedValue),
 					isPseudoFocused: this.state.isFocused
 				}, function () {
 					_this3.setValue(value);
@@ -2197,9 +2198,10 @@ Select.propTypes = {
 	valueComponent: _propTypes2['default'].func, // value component to render
 	valueKey: _propTypes2['default'].string, // path of the label value in option objects
 	valueRenderer: _propTypes2['default'].func, // valueRenderer: function (option) {}
-	wrapperStyle: _propTypes2['default'].object };
+	wrapperStyle: _propTypes2['default'].object, // optional style to apply to the component wrapper
+	onSelectResetsInput: _propTypes2['default'].bool };
 
-// optional style to apply to the component wrapper
+// whether input is cleared on select (works only for multiselect)
 Select.defaultProps = {
 	addLabelText: 'Add "{label}"?',
 	arrowRenderer: _utilsDefaultArrowRenderer2['default'],
@@ -2238,7 +2240,8 @@ Select.defaultProps = {
 	simpleValue: false,
 	tabSelectsValue: true,
 	valueComponent: _Value2['default'],
-	valueKey: 'value'
+	valueKey: 'value',
+	onSelectResetsInput: true
 };
 
 exports['default'] = Select;
